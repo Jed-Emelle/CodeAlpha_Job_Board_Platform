@@ -4,12 +4,14 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     fullName: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
 
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
 
     password: {
@@ -20,7 +22,8 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         enum: ["Candidate", "Employer", "Admin"],
-        required: true
+        required: true,
+        default: 'Candidate'
     },
 
     phone: {
@@ -38,14 +41,9 @@ const userSchema = new mongoose.Schema({
         required: function() {
             return this.role === "Employer"
         }
-    },
-
-    profilePicture: {
-        url: String,
-        publicId: String
     }
 
-}, { timestamps: true })
+}, { timestamps: true });
 
 
-module.exports = mongoose.Schema('User', userSchema);
+module.exports = mongoose.model('User', userSchema);

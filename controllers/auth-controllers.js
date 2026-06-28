@@ -19,10 +19,10 @@ const registerUser = async(req, res) => {
                 profilePicture 
             } = req.body;
 
-        const existingUser = await User.find({ $or: [{fullName}, {email}]});
+        const existingUser = await User.findOne({ $or: [{fullName}, {email}]});
         if(existingUser){
             return res.status(404).json({
-                success: true,
+                success: false,
                 message: 'User with credentials exist already!'
             })
         }
@@ -68,7 +68,7 @@ const loginUser = async(req, res) => {
     try{
         const { fullName, password } = req.body;
 
-        const user = await User.find({ fullName });
+        const user = await User.findOne({ fullName });
 
         if(!user){
             return res.status(400).json({
@@ -78,7 +78,6 @@ const loginUser = async(req, res) => {
         }
 
         const isPasswordMatch = await bcrypt.compare( password, user.password );
-
         if(!isPasswordMatch){
             return res.status(400).json({
                 success: false,
@@ -87,16 +86,18 @@ const loginUser = async(req, res) => {
         }
 
         const accessToken = jwt.sign({
+            userId: user._id,
             fullName : fullName,
-            email: email,
-            role : role || 'Candidate',
+            email: user.email,
+            role : user.role || 'Candidate',
         }, process.env.JWT_SECRET_KEY, {
             expiresIn: '30m'
         });
 
         res.status(200).json({
             success: true,
-            message: 'User Successfully Logged in'
+            message: 'User Successfully Logged in',
+            accessToken
         })
 
 
@@ -108,3 +109,8 @@ const loginUser = async(req, res) => {
         })
     }
 }
+
+module.exports = {
+    registerUser,
+    loginUser
+};
