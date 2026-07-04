@@ -2,7 +2,8 @@ const express = require('express');
 const {
     postResume,
     deleteResume
-} = require('../controllers/resume-controller')
+} = require('../controllers/resume-controller');
+
 const upload = require("../middleware/upload-middleware");
 
 const router = express.Router();
