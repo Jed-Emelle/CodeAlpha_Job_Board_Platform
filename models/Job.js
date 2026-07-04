@@ -6,18 +6,22 @@ const jobSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
+
     title: {
         type: String,
         required: true
     },
+
     description: {
         type: String,
         required: true
     },
+    
     location: {
         type: String,
         required: true
     },
+
     employmentType: {
         type: String,
         enum: [
@@ -30,13 +34,25 @@ const jobSchema = new mongoose.Schema({
         required: true
     },
 
-    salary: Number,
+    salary: {
+        type: Number,
+        required: true
+    },
 
-    experienceLevel: String,
+    experienceLevel: {
+        type: String,
+        enum: ['Intern', 'Intermediate', 'Expert']
+    },
 
-    skills: [String],
+    skills: {
+        type: String,
+        required: true
+    },
 
-    applicationDeadline: Date,
+    applicationDeadline: {
+        type: String,
+        required: true
+    },
 
     isOpen: {
         type: Boolean,
@@ -44,4 +60,6 @@ const jobSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
-module.exports = mongoose.Schema('Job', jobSchema);
+module.exports = mongoose.model('Job', jobSchema);
+
+// Make sure to change the type for applicationDeadline to a Date

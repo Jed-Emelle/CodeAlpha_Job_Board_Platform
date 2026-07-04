@@ -1,5 +1,5 @@
 
-const CandidateMiddleware = (req, res, next) => {
+const candidateMiddleware = (req, res, next) => {
     if(req.userInfo.role !== 'Candidate'){
         return res.status(403).json({
             success: false,
@@ -9,4 +9,4 @@ const CandidateMiddleware = (req, res, next) => {
     next();
 }
 
-module.exports = CandidateMiddleware;
+module.exports = candidateMiddleware;
