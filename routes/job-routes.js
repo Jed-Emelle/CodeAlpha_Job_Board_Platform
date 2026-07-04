@@ -13,6 +13,6 @@ const router = express.Router();
 router.post('/create-job', isEmployer, createJob);
 router.get('/get-jobs', getAllJobs);
 router.get('/get-job/:id', getJobById);
-router.delete('/delete-job', isEmployer, deleteJob); // not working for now
+router.delete('/delete-job/:id', isEmployer, deleteJob);
 
 module.exports = router;

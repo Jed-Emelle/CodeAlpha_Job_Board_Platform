@@ -70,7 +70,7 @@ const getAllJobs = async(req, res) => {
 const getJobById = async(req, res) => {
     try{
         const {id} = req.params.id;
-        const singleJob = await Job.findOne(id);
+        const singleJob = await Job.findById(id);
 
         if(!singleJob){
             return res.status(400).json({
@@ -92,9 +92,34 @@ const getJobById = async(req, res) => {
     }
 }
 
-// I will create the delete Job functionality later because it is not part of the core requirements
 const deleteJob = async(req, res) => {
     try{
+        const {id} = req.params.id;
+        const userId = req.userInfo.userId;
+    
+        const singleJob = await Job.findOne(id);
+
+        if(!singleJob){
+            return res.status(400).json({
+                success: false,
+                message: 'Could not find Job!'
+            })
+        }
+
+        if(userId !== singleJob.employer.toString()){
+            return res.status(403).json({
+                success: false,
+                message: 'Only the Employer that created this Job can delete it or make changed to it!'
+            })
+        }
+
+        await singleJob.deleteOne();
+
+        res.status(200).json({
+            success: true,
+            message: 'Successfully deleted a Job'
+        })
+
 
     } catch(e){
         res.status(400).json({

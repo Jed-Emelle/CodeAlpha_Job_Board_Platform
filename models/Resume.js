@@ -23,4 +23,4 @@ const resumeSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-module.exports = mongoose.Schema('Resume', resumeSchema);
+module.exports = mongoose.model('Resume', resumeSchema); 

@@ -7,7 +7,7 @@ const uploadToCloudinary = async(filePath) => {
 
         return{
             url: result.secure_url,
-            publidId: result.public_id
+            publicId: result.public_id
         }
     } catch(error){
         console.error('Error while uploading to cloudinary', error)

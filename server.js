@@ -1,10 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const connectDB = require('./Database/DB');
+
 const authRoutes = require('./routes/auth-routes');
 const jobRoutes = require('./routes/job-routes');
+const resumeRoutes = require('./routes/resume-routes');
 
 const authMiddlware = require('./middleware/auth-middleware');
+const isCandidateMiddleware = require('./middleware/candidate-middleware');
 
 connectDB();
 
@@ -15,6 +18,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', authMiddlware, jobRoutes);
+app.use('/api/resume', authMiddlware, isCandidateMiddleware, resumeRoutes);
 
 
 const PORT = process.env.PORT;
