@@ -44,12 +44,29 @@ const createJob = async(req, res) => {
 
 const getAllJobs = async(req, res) => {
     try{
-        const allJobs = await Job.find({});
+        const { title, experienceLevel, employmentType } = req.query;
+
+        // filter logic
+        const filter = {}
+
+        if(title){
+            filter.title = { $regex: title, $options: "i" };
+        }
+
+        if(experienceLevel){
+            filter.experienceLevel = { $regex: title, $options: "i" };
+        }
+
+        if(employmentType){
+            filter.employmentType = { $regex: title, $options: "i" };
+        }
+
+        const allJobs = await Job.find(filter);
 
         if(allJobs.length === 0){
             return res.status(400).json({
                 success: false,
-                message: 'No available Jobs'
+                message: 'No Jobs found'
             })
         }
 

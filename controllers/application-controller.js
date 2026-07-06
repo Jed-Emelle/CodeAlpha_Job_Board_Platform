@@ -138,6 +138,38 @@ const getSingleApplication = async(req, res) => {
     }
 }
 
+const updateApplication = async(req, res) => {
+    try{
+        const { status } = req.body;
+        const id = req.params.id;
+
+        const application = await Application.findById(id);
+
+        if(!application){
+            return res.status(404).json({
+                success: true,
+                message: 'No application found'
+            })
+        }
+
+        application.status = status;
+
+        await application.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Successfully updatd application status",
+            data: application
+        })
+
+    } catch(e){
+        return res.status(500).json({
+            success: false,
+            message: `Something went wrong. ${e.message}`
+        });
+    }
+}
+
 const deleteApplication = async(req, res) => {
     try{
         const jobId = req.params.jobId;
@@ -190,5 +222,6 @@ module.exports = {
     postApplication,
     getAllApplications,
     getSingleApplication,
+    updateApplication,
     deleteApplication
 };
