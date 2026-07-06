@@ -11,8 +11,8 @@ const router = express.Router();
 
 // routes
 router.post('/apply/:id', postApplication);
-router.get('/get-all/:id', isEmployer, getAllApplications);
-router.get('/get/:id', getSingleApplication);
-router.delete('/delete/:id', deleteApplication);
+router.get('/get-all/:id/applications', isEmployer, getAllApplications);
+router.get('/get/:applicationId', getSingleApplication);
+router.delete('/delete/:jobId/:applicationId', isEmployer, deleteApplication);
 
 module.exports = router;

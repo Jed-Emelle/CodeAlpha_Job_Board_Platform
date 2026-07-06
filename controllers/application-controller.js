@@ -63,7 +63,7 @@ const getAllApplications = async(req, res) => {
         if(!job){
             return res.status(404).json({
                 success: false,
-                message: 'Cannot get the Job you want!'
+                message: 'Job not found.'
             })
         }
 
@@ -74,20 +74,21 @@ const getAllApplications = async(req, res) => {
             })
         }
 
-        const allApplications = await Application.find({jobId})
-            // .populate("candidate", "fullName email companyName -_id")
-            // .populate("job", "title description -_id");
+        const allApplications = await Application.find({ job: jobId})
+            .populate("candidate", "fullName email companyName -_id")
+            .populate("job", "title description -_id");
 
         if (allApplications.length === 0) {
-            return res.status(404).json({
+            return res.status(200).json({
             success: false,
-            message: "No applications found for this job."
+            message: "No applications found for this job.",
+            data: []
         });
         }
 
         res.status(200).json({
             success: true,
-            message: 'Here are the Applications for your Job',
+            message: 'Applications retrieved successfully.',
             data: allApplications
         })
 
@@ -101,6 +102,33 @@ const getAllApplications = async(req, res) => {
 
 const getSingleApplication = async(req, res) => {
     try{
+        const applicationId = req.params.applicationId;
+        const candidate = req.userInfo.userId;
+
+        const application = await Application.findById(applicationId);
+
+        if(!application){
+            return res.status(404).json({
+                success: true,
+                message: 'No application found'
+            })
+        }
+
+        if(application.candidate.toString() !== candidate){
+            return res.status(403).json({
+                success: false,
+                message: 'You cannot view this Application!'
+            })
+        }
+
+        await application.populate("candidate", "fullName email -_id");
+        await application.populate("job", "title location -_id");
+
+        res.status(200).json({
+            success: true,
+            message: 'Application Retrieved successfully',
+            data: application
+        })
 
     } catch(e) {
         return res.status(500).json({
@@ -112,6 +140,43 @@ const getSingleApplication = async(req, res) => {
 
 const deleteApplication = async(req, res) => {
     try{
+        const jobId = req.params.jobId;
+        const applicationId = req.params.applicationId
+        const employerId = req.userInfo.userId;
+
+        const job = await Job.findById(jobId);
+
+        if(!job){
+            return status(400).json({
+                success: false,
+                message: 'Wrong param field!'
+            })
+        }
+
+        if(job.employer.toString() !== employerId){
+            return res.status(403).json({
+                success: false,
+                message: `Only the Employer that created this Job can delete it's application`
+            })
+        }
+
+        const application = await Application.findById(applicationId);
+
+        if(!application){
+            return res.status(404).json({
+                success: true,
+                message: 'No application found'
+            })
+        }
+
+        await application.deleteOne();
+
+        res.status(200).json({
+            success: true,
+            message: 'Application deleted Successfully!'
+        })
+
+
 
     } catch(e) {
         return res.status(500).json({
@@ -127,6 +192,3 @@ module.exports = {
     getSingleApplication,
     deleteApplication
 };
-
-// almost done with the getAll Applications. encountered and error 
-// look into it and properly test the route
