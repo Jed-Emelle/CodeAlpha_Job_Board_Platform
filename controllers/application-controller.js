@@ -60,9 +60,8 @@ const getAllApplications = async(req, res) => {
         const jobId = req.params.id;
 
         const job = await Job.findById(jobId);
-
         if(!job){
-            return res.status(400).json({
+            return res.status(404).json({
                 success: false,
                 message: 'Cannot get the Job you want!'
             })
@@ -75,15 +74,15 @@ const getAllApplications = async(req, res) => {
             })
         }
 
-        const allApplications = await Application.find({})
-            .populate("candidate", "fullName email companyName -_id")
-            .populate("job", "title description -_id");
+        const allApplications = await Application.find({jobId})
+            // .populate("candidate", "fullName email companyName -_id")
+            // .populate("job", "title description -_id");
 
-        if(!allApplications){
-            return res.status(400).json({
-                success: false,
-                message: 'No Applications for this Job'
-            })
+        if (allApplications.length === 0) {
+            return res.status(404).json({
+            success: false,
+            message: "No applications found for this job."
+        });
         }
 
         res.status(200).json({

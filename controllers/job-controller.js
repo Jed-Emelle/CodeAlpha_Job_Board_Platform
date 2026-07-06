@@ -70,7 +70,7 @@ const getAllJobs = async(req, res) => {
 const getJobById = async(req, res) => {
     try{
         const {id} = req.params.id;
-        const singleJob = await Job.findById(id);
+        const singleJob = await Job.findOne(id);
 
         if(!singleJob){
             return res.status(400).json({
