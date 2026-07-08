@@ -22,7 +22,6 @@ app.use('/api/jobs', authMiddlware, jobRoutes);
 app.use('/api/resume', authMiddlware, isCandidateMiddleware, resumeRoutes);
 app.use('/api/application', authMiddlware, applicationRoutes);
 
-
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {

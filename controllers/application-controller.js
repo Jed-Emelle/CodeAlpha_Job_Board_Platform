@@ -13,6 +13,14 @@ const postApplication = async(req, res) => {
         const { status } = req.body; 
 
         const job = await Job.findById(jobId);
+
+        if(!job){
+            return res.status(400).json({
+                success: false,
+                message: 'Job not found!'
+            })
+        }
+
         const resume = await Resume.findOne({ candidate: candidateId });
 
         if(!resume){
@@ -44,7 +52,7 @@ const postApplication = async(req, res) => {
         await newApplication.save();
 
         // creating a new notification
-        const newNotification = await Notification({
+        const newNotification = new Notification({
             recipient: job.employer,
             sender: candidateId,
             job: jobId,
@@ -186,7 +194,7 @@ const updateApplication = async(req, res) => {
 
         await application.save();
 
-        const newNotification = await Notification({
+        const newNotification = new Notification({
             recipient: application.candidate,
             sender: employer,
             job: application.job,

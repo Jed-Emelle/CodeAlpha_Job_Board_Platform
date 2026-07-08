@@ -19,7 +19,7 @@ const registerUser = async(req, res) => {
                 profilePicture 
             } = req.body;
 
-        const existingUser = await User.findOne({ $or: [{fullName}, {email}]});
+        const existingUser = await User.findOne({ email });
         if(existingUser){
             return res.status(404).json({
                 success: false,
@@ -66,9 +66,9 @@ const registerUser = async(req, res) => {
 
 const loginUser = async(req, res) => {
     try{
-        const { fullName, password } = req.body;
+        const { email, password } = req.body;
 
-        const user = await User.findOne({ fullName });
+        const user = await User.findOne({ email });
 
         if(!user){
             return res.status(400).json({

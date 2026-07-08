@@ -10,9 +10,9 @@ const createJob = async(req, res) => {
         const { title, location, description } = formData;
 
         const existingJob = await Job.findOne({ 
+            employer,
             title, 
-            location, 
-            description 
+            location 
         });
 
         if(existingJob){
@@ -54,11 +54,11 @@ const getAllJobs = async(req, res) => {
         }
 
         if(experienceLevel){
-            filter.experienceLevel = { $regex: title, $options: "i" };
+            filter.experienceLevel = { $regex: experienceLevel, $options: "i" };
         }
 
         if(employmentType){
-            filter.employmentType = { $regex: title, $options: "i" };
+            filter.employmentType = { $regex: employmentType, $options: "i" };
         }
 
         const allJobs = await Job.find(filter);
@@ -86,8 +86,8 @@ const getAllJobs = async(req, res) => {
 
 const getJobById = async(req, res) => {
     try{
-        const {id} = req.params.id;
-        const singleJob = await Job.findOne(id);
+        const id = req.params.id;
+        const singleJob = await Job.findById(id);
 
         if(!singleJob){
             return res.status(400).json({
@@ -114,7 +114,7 @@ const deleteJob = async(req, res) => {
         const {id} = req.params.id;
         const userId = req.userInfo.userId;
     
-        const singleJob = await Job.findOne(id);
+        const singleJob = await Job.findById(id);
 
         if(!singleJob){
             return res.status(400).json({
