@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Resume = require('../models/Resume');
 const Job = require('../models/Job');
 const Application = require('../models/Application');
+const Notification = require('../models/Notifications');
 
 const postApplication = async(req, res) => {
     try{
@@ -11,6 +12,7 @@ const postApplication = async(req, res) => {
         const jobId = req.params.id;
         const { status } = req.body; 
 
+        const job = await Job.findById(jobId);
         const resume = await Resume.findOne({ candidate: candidateId });
 
         if(!resume){
@@ -40,6 +42,19 @@ const postApplication = async(req, res) => {
         })
 
         await newApplication.save();
+
+        // creating a new notification
+        const newNotification = await Notification({
+            recipient: job.employer,
+            sender: candidateId,
+            job: jobId,
+            application: newApplication._id,
+            type: "NEW_APPLICATION" || "NEW_APPLICATION",
+            message: `${req.userInfo.fullName} has applied for a job as a ${job.title} at ${job.location}`,
+            isRead: false
+        })
+
+        await newNotification.save();
 
         res.status(201).json({
             success: true,
@@ -141,9 +156,10 @@ const getSingleApplication = async(req, res) => {
 const updateApplication = async(req, res) => {
     try{
         const { status } = req.body;
+        const employer = req.userInfo.userId;
         const id = req.params.id;
-
-        const application = await Application.findById(id);
+        
+        const application = await Application.findById(id).populate("job");
 
         if(!application){
             return res.status(404).json({
@@ -152,13 +168,39 @@ const updateApplication = async(req, res) => {
             })
         }
 
+        if(employer !== application.job.employer.toString()){
+            return res.status(403).json({
+                success: false,
+                message:`Only the Job Employer can update this Job's status!`
+            })
+        }
+
+        if (application.status === status) {
+            return res.status(400).json({
+            success: false,
+            message: "Application is already in this status."
+        });
+}
+
         application.status = status;
 
         await application.save();
 
+        const newNotification = await Notification({
+            recipient: application.candidate,
+            sender: employer,
+            job: application.job,
+            application: application._id,
+            type: "APPLICATION_STATUS_UPDATED" || "NEW_APPLICATION",
+            message: `Your job status has been updated to ${application.status}`,
+            isRead: false
+        })
+
+        await newNotification.save();
+
         res.status(200).json({
             success: true,
-            message: "Successfully updatd application status",
+            message: "Successfully updated application status",
             data: application
         })
 

@@ -15,7 +15,7 @@ const router = express.Router();
 router.post('/apply/:id', postApplication);
 router.get('/get-all/:id/applications', isEmployer, getAllApplications);
 router.get('/get/:applicationId', getSingleApplication);
-router.patch('/update/:id/status', isCandidate, updateApplication);
+router.patch('/update/:id/status', isEmployer, updateApplication);
 router.delete('/delete/:jobId/:applicationId', isEmployer, deleteApplication);
 
 module.exports = router;
