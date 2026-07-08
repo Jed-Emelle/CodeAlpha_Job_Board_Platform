@@ -177,7 +177,7 @@ const updateApplication = async(req, res) => {
 
         if (application.status === status) {
             return res.status(400).json({
-            success: false,
+            success: false,  
             message: "Application is already in this status."
         });
 }
