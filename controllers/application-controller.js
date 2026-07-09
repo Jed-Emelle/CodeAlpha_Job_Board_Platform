@@ -132,7 +132,7 @@ const getSingleApplication = async(req, res) => {
 
         if(!application){
             return res.status(404).json({
-                success: true,
+                success: false,
                 message: 'No application found'
             })
         }
@@ -171,7 +171,7 @@ const updateApplication = async(req, res) => {
 
         if(!application){
             return res.status(404).json({
-                success: true,
+                success: false,
                 message: 'No application found'
             })
         }
@@ -199,7 +199,7 @@ const updateApplication = async(req, res) => {
             sender: employer,
             job: application.job,
             application: application._id,
-            type: "APPLICATION_STATUS_UPDATED" || "NEW_APPLICATION",
+            type: "APPLICATION_STATUS_UPDATED",
             message: `Your job status has been updated to ${application.status}`,
             isRead: false
         })
@@ -229,7 +229,7 @@ const deleteApplication = async(req, res) => {
         const job = await Job.findById(jobId);
 
         if(!job){
-            return status(400).json({
+            return res.status(400).json({
                 success: false,
                 message: 'Wrong param field!'
             })

@@ -12,7 +12,7 @@ const isCandidate = require('../middleware/candidate-middleware');
 const router = express.Router();
 
 // routes
-router.post('/apply/:id', postApplication);
+router.post('/apply/:id', isCandidate, postApplication);
 router.get('/get-all/:id/applications', isEmployer, getAllApplications);
 router.get('/get/:applicationId', getSingleApplication);
 router.patch('/update/:id/status', isEmployer, updateApplication);
