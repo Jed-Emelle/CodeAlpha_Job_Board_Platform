@@ -87,7 +87,7 @@ const loginUser = async(req, res) => {
 
         const accessToken = jwt.sign({
             userId: user._id,
-            fullName : fullName,
+            fullName : user.fullName,
             email: user.email,
             role: user.role || 'Candidate',
         }, process.env.JWT_SECRET_KEY, {

@@ -10,7 +10,6 @@ const postApplication = async(req, res) => {
     try{
         const candidateId = req.userInfo.userId;
         const jobId = req.params.id;
-        const { status } = req.body; 
 
         const job = await Job.findById(jobId);
 
@@ -21,7 +20,7 @@ const postApplication = async(req, res) => {
             })
         }
 
-        const resume = await Resume.findOne({ candidate: candidateId });
+        const resume = await Resume.findOne({ candidate: req.userInfo.userId });
 
         if(!resume){
             return res.status(400).json({
@@ -55,9 +54,9 @@ const postApplication = async(req, res) => {
         const newNotification = new Notification({
             recipient: job.employer,
             sender: candidateId,
-            job: jobId,
+            job: jobId, 
             application: newApplication._id,
-            type: "NEW_APPLICATION" || "NEW_APPLICATION",
+            type: "NEW_APPLICATION",
             message: `${req.userInfo.fullName} has applied for a job as a ${job.title} at ${job.location}`,
             isRead: false
         })
@@ -191,20 +190,20 @@ const updateApplication = async(req, res) => {
 }
 
         application.status = status;
-
+ 
         await application.save();
 
-        const newNotification = new Notification({
-            recipient: application.candidate,
-            sender: employer,
-            job: application.job,
-            application: application._id,
-            type: "APPLICATION_STATUS_UPDATED",
-            message: `Your job status has been updated to ${application.status}`,
-            isRead: false
-        })
+        // const newNotification = new Notification({
+        //     recipient: application.candidate,
+        //     sender: employer,
+        //     job: application.job,
+        //     application: application._id,
+        //     type: "APPLICATION_STATUS_UPDATED",
+        //     message: `Your job status has been updated to ${application.status}`,
+        //     isRead: false
+        // })
 
-        await newNotification.save();
+        // await newNotification.save();
 
         res.status(200).json({
             success: true,
