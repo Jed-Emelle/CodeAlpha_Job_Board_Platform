@@ -7,6 +7,6 @@ const {
 const router = express.Router();
 
 router.get('/get-notifications', getNotifications);
-router.patch('/read-notification', readNotification);
+router.patch('/read-notification/:id', readNotification);
 
 module.exports = router;

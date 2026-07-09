@@ -51,17 +51,6 @@ const postApplication = async(req, res) => {
         await newApplication.save();
 
         // creating a new notification
-        const newNotification = new Notification({
-            recipient: job.employer,
-            sender: candidateId,
-            job: jobId, 
-            application: newApplication._id,
-            type: "NEW_APPLICATION",
-            message: `${req.userInfo.fullName} has applied for a job as a ${job.title} at ${job.location}`,
-            isRead: false
-        })
-
-        await newNotification.save();
 
         res.status(201).json({
             success: true,
@@ -192,18 +181,6 @@ const updateApplication = async(req, res) => {
         application.status = status;
  
         await application.save();
-
-        // const newNotification = new Notification({
-        //     recipient: application.candidate,
-        //     sender: employer,
-        //     job: application.job,
-        //     application: application._id,
-        //     type: "APPLICATION_STATUS_UPDATED",
-        //     message: `Your job status has been updated to ${application.status}`,
-        //     isRead: false
-        // })
-
-        // await newNotification.save();
 
         res.status(200).json({
             success: true,
