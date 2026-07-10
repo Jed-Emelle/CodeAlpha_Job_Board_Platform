@@ -1,5 +1,4 @@
-const express = require('express');
-const Notification = require('../models/Notifications');
+const Notification = require('../models/Notification');
 
 const getNotifications = async (req, res) => {
     try {
@@ -14,8 +13,8 @@ const getNotifications = async (req, res) => {
             .sort({ createdAt: -1 });
 
         if(!notifications || notifications.length === 0){
-            return res.status(404).json({
-                success: false,
+            return res.status(200).json({
+                success: true,
                 message: "No unread notifications"
             })
         };

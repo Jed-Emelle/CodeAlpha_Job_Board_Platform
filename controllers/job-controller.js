@@ -1,13 +1,10 @@
-const express = require('express');
-const mongoose = require('mongoose');
 const Job = require('../models/Job');
-
 
 const createJob = async(req, res) => {
     try{
         const formData = req.body;
 
-        const { title, location, description } = formData;
+        const { employer, title, location } = formData;
 
         const existingJob = await Job.findOne({ 
             employer,
@@ -35,7 +32,7 @@ const createJob = async(req, res) => {
 
 
     } catch(e){
-        res.status(400).json({
+        res.status(500).json({
             success: false,
             message: `Something went wrong. Please try again. Error: ${e.message}`
         })
@@ -77,7 +74,7 @@ const getAllJobs = async(req, res) => {
         })
 
     } catch(e){
-        res.status(400).json({
+        res.status(500).json({
             success: false,
             message: `Something went wrong. Please try again. Error: ${e.message}`
         })
@@ -102,7 +99,7 @@ const getJobById = async(req, res) => {
         })
 
     } catch(e){
-        res.status(400).json({
+        res.status(500).json({
             success: false,
             message: `Something went wrong. Please try again. Error: ${e.message}`
         })
@@ -111,7 +108,7 @@ const getJobById = async(req, res) => {
 
 const deleteJob = async(req, res) => {
     try{
-        const {id} = req.params.id;
+        const id = req.params.id;
         const userId = req.userInfo.userId;
     
         const singleJob = await Job.findById(id);
@@ -139,7 +136,7 @@ const deleteJob = async(req, res) => {
 
 
     } catch(e){
-        res.status(400).json({
+        res.status(500).json({
             success: false,
             message: `Something went wrong. Please try again. Error: ${e.message}`
         })

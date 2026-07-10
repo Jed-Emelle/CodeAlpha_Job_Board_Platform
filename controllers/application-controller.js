@@ -1,10 +1,8 @@
-const expess = require('express');
-
 const User = require('../models/User');
 const Resume = require('../models/Resume');
 const Job = require('../models/Job');
 const Application = require('../models/Application');
-const Notification = require('../models/Notifications');
+const Notification = require('../models/Notification');
 
 const postApplication = async(req, res) => {
     try{
