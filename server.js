@@ -9,8 +9,7 @@ const applicationRoutes = require('./routes/application-routes');
 const notificationRoutes = require('./routes/notification-routes');
 
 const authMiddleware = require('./middleware/auth-middleware');
-const isCandidate = require('./middleware/candidate-middleware');
-const isEmployer = require('./middleware/employer-middleware');
+const authorize = require('./middleware/role-middleware');
 
 connectDB();
 
@@ -21,9 +20,9 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', authMiddleware, jobRoutes);
-app.use('/api/resume', authMiddleware, isCandidate, resumeRoutes);
+app.use('/api/resume', authMiddleware, authorize("Candidate"), resumeRoutes);
 app.use('/api/application', authMiddleware, applicationRoutes);
-app.use('/api/notification', authMiddleware, isEmployer, notificationRoutes);
+app.use('/api/notification', authMiddleware, authorize("Employer"), notificationRoutes);
 
 const PORT = process.env.PORT;
 

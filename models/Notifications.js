@@ -5,32 +5,31 @@ const notificationSchema = new mongoose.Schema(
         recipient: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true
+            required: true,
         },
 
         sender: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true
+            required: true,
         },
 
         job: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Job",
-            required: true
+            required: true,
         },
 
         application: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Application",
-            required: true
         },
 
         type: {
             type: String,
             enum: [
                 "NEW_APPLICATION",
-                "APPLICATION_STATUS_UPDATED"
+                "APPLICATION_STATUS"
             ],
             default: "NEW_APPLICATION"
         },
@@ -38,16 +37,15 @@ const notificationSchema = new mongoose.Schema(
         message: {
             type: String,
             required: true,
-            trim: true
         },
 
         isRead: {
             type: Boolean,
-            default: false
+            default: false,
         }
     },
     {
-        timestamps: true
+        timestamps: true,
     }
 );
 

@@ -29,13 +29,13 @@ const postApplication = async(req, res) => {
             })
         }
 
-        const existingApplication = await Application.findOne({
+        const application = await Application.findOne({
                 candidate: candidateId,
                 job: jobId,
                 resume: resume._id 
             });
 
-        if(existingApplication){
+        if(application){
             return res.status(400).json({
                 success: false,
                 message: 'You have already applied for this job'
@@ -51,6 +51,16 @@ const postApplication = async(req, res) => {
         await newApplication.save();
 
         // creating a new notification
+        const newNotification = await Notification({
+            recipient: job.employer,
+            sender: candidateId,
+            job: job._id,
+            application: newApplication._id,
+            type: "NEW_APPLICATION",
+            message: `${req.userInfo.fullName} has applied for a job as a ${job.title} at ${job.location}`,
+        });
+
+        await newNotification.save();
 
         res.status(201).json({
             success: true,
