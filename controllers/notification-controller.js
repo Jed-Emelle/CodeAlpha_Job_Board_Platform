@@ -8,7 +8,7 @@ const getNotifications = async (req, res) => {
             recipient: employerId,
             isRead: false
         })
-            .populate("sender", "fullname email")
+            .populate("sender", "fullName email")
             .populate("job", "title")
             .sort({ createdAt: -1 });
 
