@@ -133,13 +133,6 @@ const getSingleApplication = async(req, res) => {
             })
         }
 
-        // if(application.candidate.toString() !== candidate){
-        //     return res.status(403).json({
-        //         success: false,
-        //         message: 'You cannot view this Application!'
-        //     })
-        // }
-
         await application.populate("candidate", "fullName email -_id");
         await application.populate("job", "title location -_id");
 
