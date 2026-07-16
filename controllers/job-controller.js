@@ -41,6 +41,22 @@ const createJob = async(req, res) => {
 
 const getAllJobs = async(req, res) => {
     try{
+
+        // pagination
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const skip = (page -1) * limit;
+
+        const sortBy = req.query.sortBy || 'createdAt';
+        const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1;
+        const totalJobs = await Job.countDocuments();
+        const totalPages = Math.ceil(totalJobs/ limit);
+
+        const sortObj = {};
+        sortObj[sortBy] = sortOrder;
+        
+
         const { title, experienceLevel, employmentType } = req.query;
 
         // filter logic
@@ -58,7 +74,7 @@ const getAllJobs = async(req, res) => {
             filter.employmentType = { $regex: employmentType, $options: "i" };
         }
 
-        const allJobs = await Job.find(filter);
+        const allJobs = await Job.find(filter).sort(sortObj).skip(skip).limit(limit);
 
         if(allJobs.length === 0){
             return res.status(400).json({
@@ -70,7 +86,10 @@ const getAllJobs = async(req, res) => {
         res.status(200).json({
             success: true,
             message: "These are the available Jobs",
-            allJobs
+            currentPage: page,
+            totalPages: totalPages,
+            totalJobs: totalJobs,
+            data: allJobs
         })
 
     } catch(e){
