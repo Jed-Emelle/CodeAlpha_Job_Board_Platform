@@ -1,6 +1,6 @@
 # Job Board Platform
 
-A backend-powered Job Board Platform built with **Node.js**, **Express.js**, and **MongoDB** that connects employers with job seekers. Employers can create and manage job listings, while candidates can search for jobs, upload resumes, and track their applications.
+A backend-powered Job Board Platform built with **Node.js**, **Express.js**, and **MongoDB** that connects employers with job seekers. Employers can create and manage job listings, while candidates can search for jobs, upload resumes, apply for jobs, and track their applications.
 
 ## Features
 
